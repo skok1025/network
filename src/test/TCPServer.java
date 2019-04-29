@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class TCPServer {
 
@@ -23,8 +24,8 @@ public class TCPServer {
 		
 			//serverSocket.bind(new InetSocketAddress(localhost, 5000)); // 게이트웨이 주소만 가능
 			//serverSocket.bind(new InetSocketAddress(inetAddress, 5000)); // 게이트웨이 주소만 가능
-			serverSocket.bind(new InetSocketAddress("0.0.0.0", 5000)); // 게이트웨이, IP주소만 가능
-			System.out.println(localhost +" 채팅창");
+			serverSocket.bind(new InetSocketAddress("0.0.0.0", 7000)); // 게이트웨이, IP주소만 가능
+			System.out.println(inetAddress.getHostName() +" 채팅창");
 			
 			// 3. accept
 			// : 클라이언트의 연결요청을 기다린다.
@@ -33,7 +34,7 @@ public class TCPServer {
 			InetSocketAddress inetRemoteSocketAddress = (InetSocketAddress)socket.getRemoteSocketAddress();
 			String remoteHostAddress = inetRemoteSocketAddress.getAddress().getHostAddress();
 			int remotePort = inetRemoteSocketAddress.getPort();
-			System.out.println("[server] connected by client["+":"+remotePort+"]");
+			System.out.println("[server] connected by client["+remoteHostAddress+":"+remotePort+"]");
 			
 			InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
@@ -58,7 +59,10 @@ public class TCPServer {
 			}
 			
 			
-		} catch (IOException e) {
+		} catch (SocketException e) {
+			System.out.println("[server] sudden closed");
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
