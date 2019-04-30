@@ -7,7 +7,7 @@ import java.net.SocketException;
 
 public class UDPEchoServer {
 
-	public static final int PORT = 7005;
+	public static final int PORT = 7008;
 	public static final int BUFFER_SIZE = 1024;
 	
 	
