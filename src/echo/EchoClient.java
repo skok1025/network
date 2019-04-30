@@ -22,10 +22,24 @@ public class EchoClient {
 			// 1.소켓생성
 			socket = new Socket();
 
-			// 2. 서버연결
+			// 2-1. 소켓 버퍼 사이즈 확인
+			int receiveBufferSize = socket.getReceiveBufferSize();
+			int sendBufferSize = socket.getSendBufferSize();
+			
+			System.out.println(receiveBufferSize+":"+sendBufferSize);
+			
+			
+			// 2-2. 소켓 버퍼 사이즈 변경
+			socket.setReceiveBufferSize(1024*10);
+			socket.setSendBufferSize(1024*10);
+			
+			System.out.println(receiveBufferSize+":"+sendBufferSize);
+			
+			// 3. 서버연결
 			socket.connect(new InetSocketAddress(SERVER_IP, SERVER_PORT));
 			log("connected");
 
+			
 			//4. IOStream 생성(받아오기)
 			BufferedReader br = new BufferedReader( 
 					new InputStreamReader( socket.getInputStream(),"utf-8") ); 				
@@ -38,7 +52,7 @@ public class EchoClient {
 				System.out.print(">>");
 				String line = scan.nextLine();
 				
-				if("quit".equals(line)) {
+				if("quit".contentEquals(line)) {
 					break;
 				}
 				

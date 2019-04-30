@@ -32,6 +32,8 @@ public class EchoServerReceiveThread extends Thread {
 			PrintWriter pr = new PrintWriter( 
 					new OutputStreamWriter( socket.getOutputStream(), "utf-8"), true ); // autoFlush true
 			
+			
+			
 			while(true) {
 				//5. 데이터 읽기
 				String data = br.readLine();
