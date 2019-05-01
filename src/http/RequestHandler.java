@@ -7,11 +7,28 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 
 public class RequestHandler extends Thread {
-	private static final String DOCUMENT_ROOT = "./webapp";
+	private static String documentRoot = "";
 	private Socket socket;
+	
+	static {
+		try {
+			documentRoot = new File(RequestHandler.
+					class.
+					getProtectionDomain().
+					getCodeSource().
+					getLocation().
+					toURI()).
+					getPath();
+			documentRoot += "/webapp";
+			System.out.println("---->"+documentRoot);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public RequestHandler( Socket socket ) {
 		this.socket = socket;
@@ -19,6 +36,7 @@ public class RequestHandler extends Thread {
 	
 	@Override
 	public void run() {
+		
 		try {
 
 			// logging Remote Host IP Address & Port
@@ -108,7 +126,7 @@ public class RequestHandler extends Thread {
 		
 		
 		
-		File file = new File(DOCUMENT_ROOT+url);
+		File file = new File(documentRoot+url);
 		System.out.println(file.exists());
 		if(!file.exists()) {
 			/* 응답예시
@@ -135,7 +153,7 @@ public class RequestHandler extends Thread {
 
 	private void response400Error(OutputStream os, String protocol) {
 		try {
-			File file = new File(DOCUMENT_ROOT+"/error/400.html");
+			File file = new File(documentRoot+"/error/400.html");
 			byte[] body = Files.readAllBytes(file.toPath());
 			
 			os.write((protocol+" 400 Bad Request \r\n").getBytes("UTF-8"));
@@ -152,7 +170,7 @@ public class RequestHandler extends Thread {
 	private void response404Error(OutputStream os, String protocol) {
 
 		try {
-			File file = new File(DOCUMENT_ROOT+"/error/404.html");
+			File file = new File(documentRoot+"/error/404.html");
 			byte[] body = Files.readAllBytes(file.toPath());
 			
 			os.write((protocol+" 404 File Not Found\r\n").getBytes("UTF-8"));
